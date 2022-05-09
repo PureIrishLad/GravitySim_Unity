@@ -10,7 +10,7 @@ public class Universe : MonoBehaviour
     private Rigidbody[] attractors = new Rigidbody[0];
     private Vector3[] forces = new Vector3[0];
 
-    private int numGenerate = 400;
+    private int numGenerate = 410;
     private float worldSize = 60;
     private Vector2 massRange = new Vector2(0.1f, 25.0f);
 
@@ -100,7 +100,7 @@ public class Universe : MonoBehaviour
     // Populates the universe with attractors
     public void PopulateUniverse()
     {
-        player.transform.position = new Vector3(worldSize, worldSize, worldSize);
+        player.transform.position = new Vector3(0, 0, 0);
         DeleteAll();
 
         attractors = new Rigidbody[numGenerate];
