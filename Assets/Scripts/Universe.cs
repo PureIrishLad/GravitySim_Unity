@@ -10,9 +10,8 @@ public class Universe : MonoBehaviour
     private Rigidbody[] attractors = new Rigidbody[0];
     private Vector3[] forces = new Vector3[0];
 
-    private int numGenerate = 410;
+    private int numGenerate = 450;
     private float worldSize = 60;
-    private Vector2 massRange = new Vector2(0.1f, 25.0f);
 
     private void Start()
     {
@@ -32,16 +31,17 @@ public class Universe : MonoBehaviour
     {
         for (int i = 0; i < attractors.Length - 1; i++)
         {
-            Rigidbody a = attractors[i];
+            Vector3 a = attractors[i].position;
 
             for (int j = i + 1; j < attractors.Length; j++)
             {
-                Vector3 force = Utility.CalcForce(a, attractors[j]);
-                forces[i] += force;
-                forces[j] += -force;
+                Vector3 f = Utility.CalcForce(a, attractors[j].position);
+
+                forces[i] += f;
+                forces[j] -= f;
             }
 
-            a.AddForce(forces[i]);
+            attractors[i].AddForce(forces[i]);
         }
 
         attractors[attractors.Length - 1].AddForce(forces[forces.Length - 1]);
@@ -113,16 +113,12 @@ public class Universe : MonoBehaviour
             float z = Random.Range(-worldSize, worldSize);
             Vector3 pos = new Vector3(x, y, z);
 
-            float mass = Random.Range(massRange.x, massRange.y);
-            float diameter = Utility.CalcDiameter(mass);
-
             Material mat = new Material(blank);
-            Color32 randomColor = new Color32(128, 128, (byte)(Random.Range(0, 256)), 255);
+            Color32 randomColor = new Color32(128, 128, (byte)Random.Range(0, 256), 255);
             mat.color = randomColor;
 
             GameObject thisAttractor = Instantiate(attractorPrefab, pos, Quaternion.identity);
 
-            thisAttractor.transform.localScale = new Vector3(diameter, diameter, diameter);
             thisAttractor.GetComponent<Renderer>().material = mat;
 
             attractors[i] = thisAttractor.GetComponent<Rigidbody>();
